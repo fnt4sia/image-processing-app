@@ -375,124 +375,260 @@ class ViewEdit extends StatelessWidget {
                                 )
                               : const SizedBox(),
                           controller.currentType.value == "Crop"
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                              ? Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedCropPreset("Square");
-                                        controller.applyCrop();
-                                      },
-                                      child: smallCustomButton(
-                                        "Square",
-                                        isActive: controller
-                                                .selectedCropPreset.value ==
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            controller.setSelectedCropPreset(
+                                                "Square");
+                                            controller.applyCrop();
+                                          },
+                                          child: smallCustomButton(
                                             "Square",
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedCropPreset("Portrait");
-                                        controller.applyCrop();
-                                      },
-                                      child: smallCustomButton(
-                                        "Portrait",
-                                        isActive: controller
-                                                .selectedCropPreset.value ==
+                                            isActive: controller
+                                                    .selectedCropPreset.value ==
+                                                "Square",
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        InkWell(
+                                          onTap: () {
+                                            controller.setSelectedCropPreset(
+                                                "Portrait");
+                                            controller.applyCrop();
+                                          },
+                                          child: smallCustomButton(
                                             "Portrait",
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedCropPreset("Landscape");
-                                        controller.applyCrop();
-                                      },
-                                      child: smallCustomButton(
-                                        "Landscape",
-                                        isActive: controller
-                                                .selectedCropPreset.value ==
+                                            isActive: controller
+                                                    .selectedCropPreset.value ==
+                                                "Portrait",
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        InkWell(
+                                          onTap: () {
+                                            controller.setSelectedCropPreset(
+                                                "Landscape");
+                                            controller.applyCrop();
+                                          },
+                                          child: smallCustomButton(
                                             "Landscape",
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedCropPreset("Story");
-                                        controller.applyCrop();
-                                      },
-                                      child: smallCustomButton(
-                                        "Story",
-                                        isActive: controller
-                                                .selectedCropPreset.value ==
+                                            isActive: controller
+                                                    .selectedCropPreset.value ==
+                                                "Landscape",
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        InkWell(
+                                          onTap: () {
+                                            controller
+                                                .setSelectedCropPreset("Story");
+                                            controller.applyCrop();
+                                          },
+                                          child: smallCustomButton(
                                             "Story",
-                                      ),
+                                            isActive: controller
+                                                    .selectedCropPreset.value ==
+                                                "Story",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        controller.removeCrop();
+                                      },
+                                      child: const Text("Remove Crop"),
                                     ),
                                   ],
                                 )
                               : const SizedBox(),
                           controller.currentType.value == "Resize"
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                              ? Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedSizePreset("1 : 1");
-                                        controller.applyResize();
-                                      },
-                                      child: customButton(
-                                        "1 : 1",
-                                        isActive: controller
-                                                .selectedSizePreset.value ==
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            controller
+                                                .setSelectedSizePreset("1 : 1");
+                                            controller.applyResize();
+                                          },
+                                          child: customButton(
                                             "1 : 1",
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedSizePreset("4 : 5");
-                                        controller.applyResize();
-                                      },
-                                      child: customButton(
-                                        "4 : 5",
-                                        isActive: controller
-                                                .selectedSizePreset.value ==
+                                            isActive: controller
+                                                    .selectedSizePreset.value ==
+                                                "1 : 1",
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        InkWell(
+                                          onTap: () {
+                                            controller
+                                                .setSelectedSizePreset("4 : 5");
+                                            controller.applyResize();
+                                          },
+                                          child: customButton(
                                             "4 : 5",
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    InkWell(
-                                      onTap: () {
-                                        controller
-                                            .setSelectedSizePreset("9 : 16");
-                                        controller.applyResize();
-                                      },
-                                      child: customButton(
-                                        "9 : 16",
-                                        isActive: controller
-                                                .selectedSizePreset.value ==
+                                            isActive: controller
+                                                    .selectedSizePreset.value ==
+                                                "4 : 5",
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        InkWell(
+                                          onTap: () {
+                                            controller.setSelectedSizePreset(
+                                                "9 : 16");
+                                            controller.applyResize();
+                                          },
+                                          child: customButton(
                                             "9 : 16",
+                                            isActive: controller
+                                                    .selectedSizePreset.value ==
+                                                "9 : 16",
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        InkWell(
+                                          onTap: () {
+                                            controller
+                                                .setSelectedSizePreset("3 : 1");
+                                            controller.applyResize();
+                                          },
+                                          child: customButton(
+                                            "3 : 1",
+                                            isActive: controller
+                                                    .selectedSizePreset.value ==
+                                                "3 : 1",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        controller.removeResize();
+                                      },
+                                      child: const Text("Remove Resize"),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                          controller.currentType.value == "Vignette"
+                              ? Column(
+                                  children: [
+                                    Slider(
+                                      value: controller.vignetteValue.value,
+                                      min: 0,
+                                      max: 3,
+                                      divisions: 100,
+                                      onChanged: (double value) {
+                                        controller.vignetteValue.value = value;
+                                      },
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller.applyVignette();
+                                          },
+                                          child: const Text("Apply Vignette"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                          controller.currentType.value == "Gamma"
+                              ? Column(
+                                  children: [
+                                    Slider(
+                                      value: controller.gammaValue.value,
+                                      min: 0,
+                                      max: 2,
+                                      divisions: 100,
+                                      onChanged: (double value) {
+                                        controller.gammaValue.value = value;
+                                      },
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller.applyGamma();
+                                          },
+                                          child: const Text("Apply Gamma"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                          controller.currentType.value == "Invert"
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.applyInvert();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 24,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: controller.isInverted.value
+                                              ? Colors.blue
+                                              : Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: const Text(
+                                          "Turn On Invert",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    InkWell(
+                                    GestureDetector(
                                       onTap: () {
-                                        controller
-                                            .setSelectedSizePreset("3 : 1");
-                                        controller.applyResize();
+                                        controller.removeInvert();
                                       },
-                                      child: customButton(
-                                        "3 : 1",
-                                        isActive: controller
-                                                .selectedSizePreset.value ==
-                                            "3 : 1",
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 24,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: !controller.isInverted.value
+                                              ? Colors.blue
+                                              : Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: const Text(
+                                          "Turn Off Inverted",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -555,9 +691,21 @@ class ViewEdit extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        controller.setEditType("Saturation");
+                        controller.setEditType("Invert");
                       },
-                      child: editCategory("Saturation", "saturation.png"),
+                      child: editCategory("Invert", "invert.png"),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        controller.setEditType("Vignette");
+                      },
+                      child: editCategory("Vignette", "vignette.png"),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        controller.setEditType("Gamma");
+                      },
+                      child: editCategory("Gamma", "gamma.png"),
                     ),
                   ],
                 ),

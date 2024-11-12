@@ -11,6 +11,9 @@ class ModelImage {
   final double saturation;
   final String size;
   final String crop;
+  final double vignette;
+  final bool inverted;
+  final double gamma;
 
   ModelImage({
     required this.path,
@@ -25,6 +28,9 @@ class ModelImage {
     required this.saturation,
     required this.size,
     required this.crop,
+    required this.vignette,
+    required this.inverted,
+    required this.gamma,
   });
 
   Map<String, dynamic> jsonConverter() {
@@ -41,6 +47,9 @@ class ModelImage {
       'saturation': saturation,
       'size': size,
       'crop': crop,
+      'vignette': vignette,
+      'inverted': inverted,
+      'gamma': gamma,
     };
   }
 
@@ -58,6 +67,9 @@ class ModelImage {
       saturation: json['saturation'],
       size: json['size'],
       crop: json['crop'],
+      vignette: json['vignette'],
+      inverted: json['inverted'],
+      gamma: json['gamma'],
     );
   }
 }

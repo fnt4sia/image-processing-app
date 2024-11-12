@@ -19,8 +19,6 @@ class PreferenceManager {
     final prefs = await SharedPreferences.getInstance();
     List<String> recentImages = prefs.getStringList(recentImageKey) ?? [];
 
-    print(recentImages);
-
     List<ModelImage> validImages = [];
     List<String> updatedJsonList = [];
 

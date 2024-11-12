@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:citra/controller/controller_home.dart';
 import 'package:citra/model/model_image.dart';
@@ -29,6 +30,12 @@ class ControllerEdit extends GetxController {
 
   final RxString selectedSizePreset = "".obs;
   final RxString selectedCropPreset = "".obs;
+
+  final RxBool isInverted = false.obs;
+
+  final RxDouble vignetteValue = 0.0.obs;
+
+  final RxDouble gammaValue = 1.0.obs;
 
   late String imagePath;
   ModelImage? imageModel;
@@ -108,6 +115,9 @@ class ControllerEdit extends GetxController {
       saturationValue.value = imageModel!.saturation;
       selectedSizePreset.value = imageModel!.size;
       selectedCropPreset.value = imageModel!.crop;
+      vignetteValue.value = imageModel!.vignette;
+      isInverted.value = imageModel!.inverted;
+      gammaValue.value = imageModel!.gamma;
     }
   }
 
@@ -166,7 +176,7 @@ class ControllerEdit extends GetxController {
   }
 
   void applyResize() {
-    if (selectedSizePreset.isNotEmpty) {
+    if (selectedSizePreset.value.isNotEmpty) {
       if (!activeFilters.contains('resize')) {
         activeFilters.add('resize');
       }
@@ -174,13 +184,57 @@ class ControllerEdit extends GetxController {
     }
   }
 
+  void removeResize() {
+    activeFilters.remove('resize');
+    selectedSizePreset.value = "";
+    applyFilters();
+  }
+
   void applyCrop() {
-    if (selectedCropPreset.isNotEmpty) {
+    if (selectedCropPreset.value.isNotEmpty) {
       if (!activeFilters.contains('crop')) {
         activeFilters.add('crop');
       }
       applyFilters();
     }
+  }
+
+  void removeCrop() {
+    activeFilters.remove('crop');
+    selectedCropPreset.value = "";
+    applyFilters();
+  }
+
+  void applyInvert() {
+    if (!isInverted.value) {
+      isInverted.value = true;
+      if (!activeFilters.contains('invert')) {
+        activeFilters.add('invert');
+      }
+      applyFilters();
+    }
+  }
+
+  void removeInvert() {
+    if (isInverted.value) {
+      isInverted.value = false;
+      activeFilters.remove('invert');
+      applyFilters();
+    }
+  }
+
+  void applyVignette() {
+    if (!activeFilters.contains('vignette')) {
+      activeFilters.add('vignette');
+    }
+    applyFilters();
+  }
+
+  void applyGamma() {
+    if (!activeFilters.contains('gamma')) {
+      activeFilters.add('gamma');
+    }
+    applyFilters();
   }
 
   void applyFilters() {
@@ -220,10 +274,24 @@ class ControllerEdit extends GetxController {
           case 'crop':
             tempImage = cropImage(tempImage);
             break;
+          case 'invert':
+            tempImage = img.invert(tempImage);
+            break;
+          case 'vignette':
+            tempImage = img.vignette(
+              tempImage,
+              start: 0.3,
+              end: 1,
+              amount: vignetteValue.value,
+            );
+          case 'gamma':
+            tempImage = img.gamma(
+              tempImage,
+              gamma: gammaValue.value,
+            );
         }
       }
       editedImage.value = tempImage;
-      update();
     }
   }
 
@@ -240,6 +308,9 @@ class ControllerEdit extends GetxController {
       saturationValue.value = 1.0;
       selectedSizePreset.value = "";
       selectedCropPreset.value = "";
+      vignetteValue.value = 0.0;
+      isInverted.value = false;
+      gammaValue.value = 1.0;
     } else {
       applySavedFilters();
     }
@@ -335,6 +406,9 @@ class ControllerEdit extends GetxController {
           saturation: saturationValue.value,
           size: selectedSizePreset.value,
           crop: selectedCropPreset.value,
+          vignette: vignetteValue.value,
+          inverted: isInverted.value,
+          gamma: gammaValue.value,
         ),
       );
 
