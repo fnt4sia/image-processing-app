@@ -28,6 +28,13 @@ class ControllerHome extends GetxController {
     }
   }
 
+  Future<void> deleteImage(ModelImage image) async {
+    recentImages.value = List.from(recentImages.value)..remove(image);
+    await PreferenceManager.saveAllToLocalStorage(
+      listFiles: recentImages.value,
+    );
+  }
+
   void goToEdit() {
     Get.toNamed('/edit');
   }

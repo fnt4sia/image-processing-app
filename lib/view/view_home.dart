@@ -44,6 +44,9 @@ class ViewHome extends StatelessWidget {
                           () {
                             Get.toNamed('/edit', arguments: image);
                           },
+                          () async {
+                            await controller.deleteImage(image);
+                          },
                           image,
                         );
                       }),
@@ -80,10 +83,32 @@ class ViewHome extends StatelessWidget {
     );
   }
 
-  Widget recentEditContainer(void Function() onTap, ModelImage image) {
+  Widget recentEditContainer(void Function() onTap,
+      Future<void> Function() onLogPress, ModelImage image) {
     return InkWell(
       onTap: () {
         onTap();
+      },
+      onLongPress: () {
+        Get.defaultDialog(
+          title: "Delete Image",
+          middleText: "Are you sure want to delete this image?",
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await onLogPress();
+                Get.back();
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
       },
       child: Container(
         width: 170,

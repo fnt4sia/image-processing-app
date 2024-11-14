@@ -37,4 +37,16 @@ class PreferenceManager {
 
     return validImages;
   }
+
+  static Future<void> saveAllToLocalStorage({required List<ModelImage> listFiles}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> recentImages = [];
+
+    for (ModelImage image in listFiles) {
+      recentImages.add(jsonEncode(image.jsonConverter()));
+    }
+
+    await prefs.setStringList(recentImageKey, recentImages);
+  }
 }
