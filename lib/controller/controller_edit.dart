@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:citra/controller/controller_home.dart';
 import 'package:citra/model/model_image.dart';
 import 'package:citra/util/preference_manager.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gal/gal.dart';
 import 'package:image/image.dart' as img;
@@ -10,6 +11,8 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ControllerEdit extends GetxController {
+  final RxBool isCurrentImage = true.obs;
+
   final RxBool isVisiblePrevious = false.obs;
   final RxString currentType = ''.obs;
   final RxList<String> activeFilters = <String>[].obs;
@@ -36,6 +39,8 @@ class ControllerEdit extends GetxController {
   final RxDouble vignetteValue = 0.0.obs;
 
   final RxDouble gammaValue = 1.0.obs;
+
+  final Rx<List<int>> histogram = Rx<List<int>>(List<int>.filled(256, 0));
 
   late String imagePath;
   ModelImage? imageModel;
@@ -292,7 +297,22 @@ class ControllerEdit extends GetxController {
         }
       }
       editedImage.value = tempImage;
+      updateHistogram(tempImage);
     }
+  }
+
+  void updateHistogram(img.Image image) {
+    List<int> histogramData = List<int>.filled(256, 0);
+
+    for (int y = 0; y < image.height; y++) {
+      for (int x = 0; x < image.width; x++) {
+        // int pixel = image.getPixel(x, y);
+        // int gray = img.getLuminance(pixel);
+        // histogramData[gray]++;
+      }
+    }
+
+    histogram.value = histogramData;
   }
 
   void resetFilters() {
@@ -427,5 +447,120 @@ class ControllerEdit extends GetxController {
         backgroundColor: Colors.white.withAlpha(128),
       );
     }
+  }
+
+  Map<String, List<int>> getHistogramData() {
+    List<int> redHistogram = List.filled(256, 0);
+    List<int> greenHistogram = List.filled(256, 0);
+    List<int> blueHistogram = List.filled(256, 0);
+
+    if (editedImage.value != null) {
+      final img.Image image = editedImage.value!;
+      final pixels = image.getBytes();
+      const int bytesPerPixel = 3; 
+      final int length = pixels.length;
+
+      for (int i = 0; i < length; i += bytesPerPixel) {
+        final int r = pixels[i];
+        final int g = pixels[i + 1];
+        final int b = pixels[i + 2];
+
+        redHistogram[r]++;
+        greenHistogram[g]++;
+        blueHistogram[b]++;
+      }
+    }
+
+    return {
+      'red': redHistogram,
+      'green': greenHistogram,
+      'blue': blueHistogram,
+    };
+  }
+
+  LineChartData getLineChartData() {
+    final histograms = getHistogramData();
+
+    final redHistogram = histograms['red']!;
+    final greenHistogram = histograms['green']!;
+    final blueHistogram = histograms['blue']!;
+
+    final maxY = [
+      redHistogram.reduce((a, b) => a > b ? a : b),
+      greenHistogram.reduce((a, b) => a > b ? a : b),
+      blueHistogram.reduce((a, b) => a > b ? a : b),
+    ].reduce((a, b) => a > b ? a : b).toDouble();
+
+    List<FlSpot> createSpots(List<int> histogram) {
+      return List.generate(
+          256, (i) => FlSpot(i.toDouble(), histogram[i].toDouble()));
+    }
+
+    final redSpots = createSpots(redHistogram);
+    final greenSpots = createSpots(greenHistogram);
+    final blueSpots = createSpots(blueHistogram);
+
+    return LineChartData(
+      maxY: maxY,
+      lineBarsData: [
+        LineChartBarData(
+          spots: redSpots,
+          isCurved: false,
+          color: Colors.red,
+          barWidth: 2,
+          dotData: const FlDotData(show: false),
+        ),
+        LineChartBarData(
+          spots: greenSpots,
+          isCurved: false,
+          color: Colors.green,
+          barWidth: 2,
+          dotData: const FlDotData(show: false),
+        ),
+        LineChartBarData(
+          spots: blueSpots,
+          isCurved: false,
+          color: Colors.blue,
+          barWidth: 2,
+          dotData: const  FlDotData(show: false),
+        ),
+      ],
+      gridData: const FlGridData(show: false),
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 64,
+            getTitlesWidget: (value, meta) {
+              return Text(
+                '${value.toInt()}',
+                style: const TextStyle(color: Colors.grey, fontSize: 10),
+              );
+            },
+            reservedSize: 22,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: maxY / 5,
+            getTitlesWidget: (value, meta) {
+              return Text(
+                '${value.toInt()}',
+                style: const TextStyle(color: Colors.grey, fontSize: 10),
+              );
+            },
+            reservedSize: 32,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          left: BorderSide(color: Colors.grey),
+          bottom: BorderSide(color: Colors.grey),
+        ),
+      ),
+    );
   }
 }

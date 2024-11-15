@@ -1,4 +1,5 @@
 import 'package:citra/controller/controller_edit.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
@@ -44,11 +45,19 @@ class ViewEdit extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Text(
-                    "ea",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
+                  InkWell(
+                    onTap: () {
+                      controller.isCurrentImage.value =
+                          !controller.isCurrentImage.value;
+                    },
+                    child: Obx(
+                      () => Text(
+                        controller.isCurrentImage.value ? "Image" : "Histogram",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
                   Row(
@@ -83,13 +92,14 @@ class ViewEdit extends StatelessWidget {
             Expanded(
               child: SizedBox(
                 width: double.infinity,
-                child: Obx(
-                  () {
+                child: Obx(() {
+                  if (controller.isCurrentImage.value) {
                     if (controller.editedImage.value != null) {
                       final imageBytes = img.encodeJpg(
-                          controller.isVisiblePrevious.value
-                              ? controller.originalImage.value!
-                              : controller.editedImage.value!);
+                        controller.isVisiblePrevious.value
+                            ? controller.originalImage.value!
+                            : controller.editedImage.value!,
+                      );
                       return Image.memory(
                         imageBytes,
                         fit: BoxFit.contain,
@@ -105,8 +115,18 @@ class ViewEdit extends StatelessWidget {
                         ),
                       );
                     }
-                  },
-                ),
+                  } else {
+                    return Center(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 325,
+                        child: LineChart(
+                          controller.getLineChartData(),
+                        ),
+                      ),
+                    );
+                  }
+                }),
               ),
             ),
             Obx(
